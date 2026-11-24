@@ -1,0 +1,27 @@
+name: Cloud Trading Bot
+
+on:
+  schedule:
+    # Uruchamia się co godzinę od poniedziałku do piątku (cron używa czasu UTC)
+    - cron: '0 * * * 1-5'
+  workflow_dispatch: # Pozwala na ręczne uruchomienie z poziomu GitHuba
+
+jobs:
+  run-bot:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Pobierz kod z repozytorium
+        uses: actions/checkout@v3
+
+      - name: Skonfiguruj Pythona
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Zainstaluj biblioteki
+        run: |
+          python -m pip install --upgrade pip
+          pip install yfinance pandas numpy
+
+      - name: Uruchom bota tradingowego
+        run: python cloud_bot.py
