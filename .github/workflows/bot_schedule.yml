@@ -2,9 +2,9 @@ name: Cloud Trading Bot
 
 on:
   schedule:
-    # Uruchamia się co godzinę od poniedziałku do piątku (cron używa czasu UTC)
-    - cron: '0 * * * 1-5'
-  workflow_dispatch: # Pozwala na ręczne uruchomienie z poziomu GitHuba
+    # Uruchamia się raz dziennie o 21:30 UTC (po zamknięciu giełdy w USA)
+    - cron: '30 20 * * 1-5'
+  workflow_dispatch:
 
 jobs:
   run-bot:
@@ -25,5 +25,8 @@ jobs:
 
       - name: Uruchom bota tradingowego
         env:
+          # Tutaj przekazujemy sekrety z GitHuba do zmiennych środowiskowych
+          ALPACA_API_KEY: ${{ secrets.ALPACA_API_KEY }}
+          ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
-        run: python cloud_bot.py
+        run: python alpaca_bot.py
